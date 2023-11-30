@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Elena Rashkovan](https://up.htmlacademy.ru/nodejs-2/5/user/196306).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Сушко](https://up.htmlacademy.ru/nodejs-2/5/user/281347).
 
 ---
 
