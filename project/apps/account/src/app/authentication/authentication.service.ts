@@ -12,7 +12,7 @@ export class AuthenticationService {
   ) {}
 
   public async register(dto: CreateUserDto) {
-    const {email, name, password} = dto;
+    const { email, name, password} = dto;
 
     const blogUser = {
       email,
@@ -27,11 +27,9 @@ export class AuthenticationService {
       throw new ConflictException(AUTH_USER_EXISTS);
     }
 
-    const userEntity = await new BlogUserEntity(blogUser)
-      .setPassword(password)
+    const userEntity = await new BlogUserEntity(blogUser).setPassword(password)
 
-    return this.blogUserRepository
-      .save(userEntity);
+    return this.blogUserRepository.save(userEntity);
   }
 
   public async verifyUser(dto: LoginUserDto) {
@@ -42,12 +40,11 @@ export class AuthenticationService {
       throw new NotFoundException(AUTH_USER_NOT_FOUND);
     }
 
-    const blogUserEntity = new BlogUserEntity(existingUser);
-    if (!await blogUserEntity.comparePassword(password)) {
+    if (!await existingUser.comparePassword(password)) {
       throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
     }
 
-    return blogUserEntity.toPOJO();
+    return existingUser.toPOJO();
   }
 
   public async getUser(id: string) {

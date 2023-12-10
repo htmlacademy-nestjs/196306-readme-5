@@ -26,7 +26,7 @@ export class AuthenticationController {
 
   @Get(':id')
   public async show(@Param('id') id: string) {
-    const existUser = await this.authService.getUser(id);
-    return fillDto(UserRdo, existUser.toPOJO());
+    const existingUser = await this.authService.getUser(id);
+    return fillDto(UserRdo, existingUser.toPOJO());
   }
 }
