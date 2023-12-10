@@ -1,8 +1,9 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { BlogUserRepository } from '../blog-user/blog-user.repository';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { AUTH_USER_EXISTS } from './authentication.constant';
+import { LoginUserDto } from './dto/login-user.dto';
+import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './authentication.constant';
 
 @Injectable()
 export class AuthenticationService {
@@ -31,5 +32,25 @@ export class AuthenticationService {
 
     return this.blogUserRepository
       .save(userEntity);
+  }
+
+  public async verifyUser(dto: LoginUserDto) {
+    const { email, password } = dto;
+    const existingUser = await this.blogUserRepository.findByEmail(email);
+
+    if (!existingUser) {
+      throw new NotFoundException(AUTH_USER_NOT_FOUND);
+    }
+
+    const blogUserEntity = new BlogUserEntity(existingUser);
+    if (!await blogUserEntity.comparePassword(password)) {
+      throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
+    }
+
+    return blogUserEntity.toPOJO();
+  }
+
+  public async getUser(id: string) {
+    return this.blogUserRepository.findById(id);
   }
 }
